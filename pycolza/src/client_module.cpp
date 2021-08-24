@@ -101,16 +101,26 @@ PYBIND11_MODULE(_colza_client, m) {
                 return result;
             }, "Cleanup an iteration.",
             "iteration"_a)
-        .def("stage", [](const PipelineHandle& p, uint64_t iteration,
-                         uint64_t block_id, const std::vector<size_t>& dimensions,
-                         const std::vector<int64_t>& offsets, const Type& type,
+        .def("stage", [](const PipelineHandle& p, const std::string& dataset_name,
+                         uint64_t iteration, uint64_t block_id, const Type& type,
                          const np::array& data) {
-                // TODO
+                if(!(data.flags() & (np::array::f_style | np::array::c_style))) {
+                    throw std::runtime_error("Non-contiguous numpy arrays not yet supported in PyColza");
+                }
+                std::vector<size_t> dimensions;
+                for(int i = 0; i < data.ndim(); i++) {
+                    dimensions.push_back(data.shape(i));
+                }
+                const void* buffer = data.data();
+                int32_t result;
+                auto offsets = std::vector<int64_t>();
+                p.stage(dataset_name, iteration, block_id, dimensions, offsets, type, buffer, &result);
+                return result;
             }, "Send data to the pipeline.",
+            "dataset_name"_a,
             "iteration"_a, "block_id"_a,
-            "dimensions"_a, "offsets"_a,
             "type"_a, "data"_a);
-        ;
+
     py11::class_<DistributedPipelineHandle>(m, "ColzaDistributedPipelineHandle")
         .def("start", &DistributedPipelineHandle::start, "Start an iteration.", "iteration"_a)
         .def("execute", [](const DistributedPipelineHandle& p, uint64_t iteration, bool autoCleanup) {
@@ -125,14 +135,23 @@ PYBIND11_MODULE(_colza_client, m) {
                 return result;
             }, "Cleanup an iteration.",
             "iteration"_a)
-        .def("stage", [](const DistributedPipelineHandle& p, uint64_t iteration,
-                         uint64_t block_id, const std::vector<size_t>& dimensions,
-                         const std::vector<int64_t>& offsets, const Type& type,
+        .def("stage", [](const DistributedPipelineHandle& p, const std::string& dataset_name,
+                         uint64_t iteration, uint64_t block_id, const Type& type,
                          const np::array& data) {
-                // TODO
+                if(!(data.flags() & (np::array::f_style | np::array::c_style))) {
+                    throw std::runtime_error("Non-contiguous numpy arrays not yet supported in PyColza");
+                }
+                std::vector<size_t> dimensions;
+                for(int i = 0; i < data.ndim(); i++) {
+                    dimensions.push_back(data.shape(i));
+                }
+                const void* buffer = data.data();
+                int32_t result;
+                auto offsets = std::vector<int64_t>();
+                p.stage(dataset_name, iteration, block_id, dimensions, offsets, type, buffer, &result);
+                return result;
             }, "Send data to the pipeline.",
+            "dataset_name"_a,
             "iteration"_a, "block_id"_a,
-            "dimensions"_a, "offsets"_a,
             "type"_a, "data"_a);
-        ;
 }

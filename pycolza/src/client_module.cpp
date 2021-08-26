@@ -79,8 +79,15 @@ PYBIND11_MODULE(_colza_client, m) {
              "name"_a,
              "check"_a=true)
         .def("make_distributed_pipeline_handle",
-             &Client::makeDistributedPipelineHandle,
-             "Create a distributed pipeline handle.",
+            [](const Client& client,
+               const ColzaCommunicator& comm,
+               const std::string& ssg_file,
+               uint16_t provider_id,
+               const std::string& name,
+               bool check) {
+             return client.makeDistributedPipelineHandle(
+                     &comm, ssg_file, provider_id, name, check);
+             },
              "comm"_a,
              "ssg_file"_a,
              "provider_id"_a,

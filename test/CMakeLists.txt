@@ -7,6 +7,7 @@ set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package (colza REQUIRED)
+find_package (spdlog REQUIRED)
 
-add_library (pycolza-test-pipeline SHARED test-pipeline.cpp)
-target_link_libraries (pycolza-test-pipeline colza-server)
+add_library (pycolza-test-pipeline SHARED TestPipeline.cpp)
+target_link_libraries (pycolza-test-pipeline colza-server spdlog::spdlog)

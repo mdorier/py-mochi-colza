@@ -1,0 +1,9 @@
+{
+    "pipelines" : {
+        "vtk" : {
+            "library" : "libpycolza-test-pipeline.so",
+            "type" : "test",
+            "config" : {}
+        }
+    }
+}

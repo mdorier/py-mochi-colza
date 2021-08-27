@@ -1,6 +1,7 @@
 spack:
   specs:
   - py-mochi-margo
+  - py-mochi-ssg@main
   - py-pkgconfig
   - py-pybind11
   - py-mpi4py

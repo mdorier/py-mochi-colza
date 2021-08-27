@@ -2,6 +2,7 @@ import _colza_client
 
 
 ColzaCommunicator = _colza_client.ColzaCommunicator
+Type = _colza_client.Type
 
 
 class ColzaClient(_colza_client.ColzaClient):

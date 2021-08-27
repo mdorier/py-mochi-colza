@@ -32,6 +32,20 @@ colza::RequestResult<int32_t> TestPipeline::execute(
         uint64_t iteration) {
     (void)iteration;
     spdlog::trace("Iteration {} executing", iteration);
+
+    const auto& block = m_datasets[iteration]["my_dataset"][0];
+    spdlog::trace("Data block 0 has dimensions:");
+    for(auto& d : block.dimensions) {
+        spdlog::trace("    {}", d);
+    }
+    double s = 0.0;
+    double x;
+    for(size_t i = 0; i < block.data.size()/8; i++) {
+        std::memcpy(&x, block.data.data()+i*8, 8);
+        s += x;
+    }
+    spdlog::trace("Sum of all data elements is {}", s);
+
     auto result = colza::RequestResult<int32_t>();
     result.value() = 0;
     return result;

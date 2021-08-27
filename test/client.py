@@ -26,6 +26,7 @@ def run_test(engine):
         pipeline.start(i)
         print('Sending numpy array')
         data = np.random.rand(10, 20, 30)
+        print('Data sums to '+str(np.sum(data)))
         pipeline.stage(dataset_name='my_dataset', iteration=i,
                        block_id=0, type=Type.FLOAT64, data=data)
         print('Executing pipeline')
